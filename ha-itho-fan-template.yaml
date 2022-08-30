@@ -1,13 +1,13 @@
 fan:
-- platform: template
+  - platform: template
     fans:
-      afzuiging_badkamer:
-        friendly_name: "Afzuiging badkamer"
+      mechanical_ventilation:
+        friendly_name: "Mechanical Ventilation"
         value_template: >
           {{ "off" if states('sensor.fanspeed') == 'Low' else "on" }}
+        preset_mode_template: "{{ states('sensor.fanspeed') }}"
         percentage_template: >
-          {% set speedperc = {'Low': 0, 'Medium': 50, 'High': 100} %}
-          {{speedperc [states('sensor.fanspeed')]}}
+          {{ 0 if states('sensor.fanspeed') == 'Low' else 50 if states('sensor.fanspeed') == 'Medium' else 100 }}
         turn_on:
           service: switch.turn_on
           data:
@@ -15,11 +15,23 @@ fan:
         turn_off:
           service: switch.turn_on
           data:
-            entity_id: switch.fansendlow    
-        set_percentage: 
+            entity_id: switch.fansendlow
+        set_preset_mode:
           service: switch.turn_on
-          data:
+          data_template:
             entity_id: >
-              {% set id_mapp = {0:'switch.fansendlow',50:'switch.fansendmedium', 100:'switch.fansendhigh'} %}
-              {{id_mapp[percentage]}}
+              {% set mapper = { 'Timer 1':'switch.fansendtimer1','Timer 2':'switch.fansendtimer2','Timer 3':'switch.fansendtimer3','High':'switch.fansendhigh', 'Medium':'switch.fansendmedium', 'Low':'switch.fansendlow' } %}
+              {{ mapper[preset_mode] if preset_mode in mapper else switch.fansendlow }}
+        preset_modes:
+          - 'Low'
+          - 'Medium'
+          - 'High'
+          - 'Timer 1'
+          - 'Timer 2'
+          - 'Timer 3'
+        set_percentage:
+          service: switch.turn_on
+          data_template:
+            entity_id: >
+              {{ 'switch.fansendhigh' if percentage > 50 else 'switch.fansendmedium' if percentage > 0 else 'switch.fansendlow' }}                                              
         speed_count: 2

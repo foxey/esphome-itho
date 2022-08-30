@@ -298,62 +298,104 @@ void ITHOcheck() {
 	if ( index>=0) { // Only accept commands that are in the list
 		switch (cmd) {
 		case IthoUnknown:
-			ESP_LOGV("custom", "Unknown command");
+			ESP_LOGV("itho", "Unknown command");
 			break;
 		case IthoLow:
 		case DucoLow:
-			ESP_LOGD("custom", "IthoLow");
+			ESP_LOGD("itho", "IthoLow");
 			State = 1;
 			Timer = 0;
 			LastID = Idlist[index].Roomname;
 			break;
 		case IthoMedium:
 		case DucoMedium:
-			ESP_LOGD("custom", "Medium");
+			ESP_LOGD("itho", "Medium");
 			State = 2;
 			Timer = 0;
 			LastID = Idlist[index].Roomname;
 			break;
 		case IthoHigh:
 		case DucoHigh:
-			ESP_LOGD("custom", "High");
+			ESP_LOGD("itho", "High");
 			State = 3;
 			Timer = 0;
 			LastID = Idlist[index].Roomname;
 			break;
 		case IthoFull:
-			ESP_LOGD("custom", "Full");
+			ESP_LOGD("itho", "Full");
 			State = 4;
 			Timer = 0;
 			LastID = Idlist[index].Roomname;
 			break;
 		case IthoTimer1:
-			ESP_LOGD("custom", "Timer1");
+			ESP_LOGD("itho", "Timer1");
 			State = 13;
 			Timer = Time1;
 			LastID = Idlist[index].Roomname;
 			break;
 		case IthoTimer2:
-			ESP_LOGD("custom", "Timer2");
+			ESP_LOGD("itho", "Timer2");
 			State = 23;
 			Timer = Time2;
 			LastID = Idlist[index].Roomname;
 			break;
 		case IthoTimer3:
-			ESP_LOGD("custom", "Timer3");
+			ESP_LOGD("itho", "Timer3");
 			State = 33;
 			Timer = Time3;
 			LastID = Idlist[index].Roomname;
 			break;
 		case IthoJoin:
+			ESP_LOGD("itho", "Join");
 			break;
 		case IthoLeave:
+			ESP_LOGD("itho", "Leave");
 			break;
 		default:
+			ESP_LOGV("itho", "Unknown command");
 		    break;
 		}
 	}
-	else ESP_LOGV("","Ignored device-id: %s", Id.c_str());
+	else {
+		switch (cmd) {
+		case IthoUnknown:
+			ESP_LOGV("itho","Ignored unknown command for device-id: %s", Id.c_str());
+			break;
+		case IthoLow:
+		case DucoLow:
+			ESP_LOGD("itho","Ignored IthoLow for device-id: %s", Id.c_str());
+			break;
+		case IthoMedium:
+		case DucoMedium:
+			ESP_LOGD("itho","Ignored Medium for device-id: %s", Id.c_str());
+			break;
+		case IthoHigh:
+		case DucoHigh:
+			ESP_LOGD("itho","Ignored High for device-id: %s", Id.c_str());
+			break;
+		case IthoFull:
+			ESP_LOGD("itho","Ignored Full for device-id: %s", Id.c_str());
+			break;
+		case IthoTimer1:
+			ESP_LOGD("itho","Ignored Timer1 for device-id: %s", Id.c_str());
+			break;
+		case IthoTimer2:
+			ESP_LOGD("itho","Ignored Timer2 for device-id: %s", Id.c_str());
+			break;
+		case IthoTimer3:
+			ESP_LOGD("itho","Ignored Timer3 for device-id: %s", Id.c_str());
+			break;
+		case IthoJoin:
+			ESP_LOGD("itho","Ignored Join for device-id: %s", Id.c_str());
+			break;
+		case IthoLeave:
+			ESP_LOGD("itho","Ignored Leave for device-id: %s", Id.c_str());
+			break;
+		default:
+			ESP_LOGV("itho","Ignored unknow for device-id: %s", Id.c_str());
+		    break;
+		}
+	}
   }
   interrupts(); //enable interrupts
 }
